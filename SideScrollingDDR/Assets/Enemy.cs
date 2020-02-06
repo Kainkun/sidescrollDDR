@@ -24,7 +24,19 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        rb.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, Time.deltaTime * moveSpeed));
+
+        Vector2 nextPosition = player.transform.position;
+        if (Mathf.Abs((player.transform.position - transform.position).x) > Mathf.Abs((player.transform.position - transform.position).y))
+        {
+            print("x>y");
+            nextPosition.y = 0;
+        }
+        else
+        {
+            print("y>x");
+            nextPosition.x = 0;
+        }
+        rb.MovePosition(Vector2.MoveTowards(transform.position, nextPosition, Time.deltaTime * moveSpeed));
     }
 
     public void TakeDamage(int damage)
