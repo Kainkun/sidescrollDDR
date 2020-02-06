@@ -45,13 +45,14 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateJumpData();
-        GetInput();
+        MovementInput();
+        ActionInput();
         CheckGrounded();
         CheckCeiling();
         CalculateMovement();
     }
 
-    void GetInput()
+    void MovementInput()
     {
         leftDirection.x = Input.GetAxis("LHorizontal");
         leftDirection.y = Input.GetAxisRaw("LVertical");
@@ -59,20 +60,20 @@ public class Player : MonoBehaviour
         rightDirection.x = Input.GetAxisRaw("RHorizontal");
         rightDirection.y = Input.GetAxisRaw("RVertical");
 
-
-        if (Input.GetButtonDown("FireUp"))
-            GetOverlappingInDirection(directions.UP);
-        if (Input.GetButtonDown("FireDown"))
-            GetOverlappingInDirection(directions.DOWN);
-        if (Input.GetButtonDown("FireRight"))
-            GetOverlappingInDirection(directions.RIGHT);
-        if (Input.GetButtonDown("FireLeft"))
-            GetOverlappingInDirection(directions.LEFT);
-
-
-
         if (Input.GetKeyDown(KeyCode.W))
             Jump();
+    }
+
+    void ActionInput()
+    {
+        if (Input.GetButtonDown("FireUp"))
+            AttackInDirection(directions.UP);
+        if (Input.GetButtonDown("FireDown"))
+            AttackInDirection(directions.DOWN);
+        if (Input.GetButtonDown("FireRight"))
+            AttackInDirection(directions.RIGHT);
+        if (Input.GetButtonDown("FireLeft"))
+            AttackInDirection(directions.LEFT);
     }
 
     void CalculateMovement()
@@ -134,7 +135,7 @@ public class Player : MonoBehaviour
 
     enum directions {UP, DOWN, RIGHT, LEFT}
     LayerMask enemyOnlyMask = 1 << 8;
-    void GetOverlappingInDirection(directions direction)
+    void AttackInDirection(directions direction)
     {
 
         Vector2[] corners = new Vector2[3];
@@ -172,7 +173,9 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        GetClosestEnemy(overlappingColliders).GetComponent<Enemy>().TakeDamage(1);
+        var closestEnemy = GetClosestEnemy(overlappingColliders);
+        if(closestEnemy)
+            closestEnemy.GetComponent<Enemy>().TakeDamage(1);
 
     }
 

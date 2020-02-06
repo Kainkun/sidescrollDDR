@@ -22,10 +22,6 @@ public class MainCamera : MonoBehaviour
     }
 
 
-    void Update()
-    {
-        
-    }
 
     Vector3 camGoTo;
     private void FixedUpdate()
