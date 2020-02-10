@@ -25,7 +25,9 @@ public class Player : MonoBehaviour
     bool ceiling;
     bool grounded;
 
-
+    LayerMask enemyOnlyMask = 1 << 8;
+    LayerMask ignoreRaycastMask = 1 << 2;
+    LayerMask ceilingHitMask;
 
     private void Awake()
     {
@@ -36,6 +38,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        ceilingHitMask = ~(enemyOnlyMask | ignoreRaycastMask);
+
         CalculateJumpData();
 
         grounded = true;
@@ -101,10 +105,11 @@ public class Player : MonoBehaviour
 
     void CheckCeiling()
     {
-        if (Physics2D.BoxCast(transform.position, new Vector2(groundedRaycastBoxWidth, 1f), 0, Vector2.up, groundedRaycastDistance))
+        if (Physics2D.BoxCast(transform.position, new Vector2(groundedRaycastBoxWidth, 1f), 0, Vector2.up, groundedRaycastDistance, ceilingHitMask))
         {
             if (!ceiling)
             {
+                print("OW MY HEAD");
                 ceiling = true;
                 velocity.y = 0;
             }
@@ -134,7 +139,6 @@ public class Player : MonoBehaviour
     public PolygonCollider2D PolyTrigLeft;
 
     enum directions {UP, DOWN, RIGHT, LEFT}
-    LayerMask enemyOnlyMask = 1 << 8;
     void AttackInDirection(directions direction)
     {
 

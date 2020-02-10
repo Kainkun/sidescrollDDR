@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 
     public int health = 1;
     public float moveSpeed = 1;
+    public float centeringSpeed = 3;
 
     Player player;
     Rigidbody2D rb;
@@ -24,19 +25,24 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        Movement();
+    }
 
-        Vector2 nextPosition = player.transform.position;
+    void Movement()
+    {
+        Vector2 nextVector = player.transform.position - transform.position;
+
+        nextVector = nextVector.normalized;
         if (Mathf.Abs((player.transform.position - transform.position).x) > Mathf.Abs((player.transform.position - transform.position).y))
         {
-            print("x>y");
-            nextPosition.y = 0;
+            nextVector.y *= centeringSpeed;
         }
         else
         {
-            print("y>x");
-            nextPosition.x = 0;
+            nextVector.x *= centeringSpeed;
         }
-        rb.MovePosition(Vector2.MoveTowards(transform.position, nextPosition, Time.deltaTime * moveSpeed));
+
+        rb.MovePosition((Vector2)transform.position + (nextVector * Time.deltaTime * moveSpeed));
     }
 
     public void TakeDamage(int damage)
