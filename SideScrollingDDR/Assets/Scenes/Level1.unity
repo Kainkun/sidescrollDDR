@@ -375,6 +375,12 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!60 &84966832 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5902061256844565544, guid: 905084cdb26472048af9324de89d4566,
+    type: 3}
+  m_PrefabInstance: {fileID: 972630634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &152586187
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,6 +1506,18 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!60 &177466627 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5902061255526064200, guid: 905084cdb26472048af9324de89d4566,
+    type: 3}
+  m_PrefabInstance: {fileID: 972630634}
+  m_PrefabAsset: {fileID: 0}
+--- !u!60 &334012789 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5902061256102926217, guid: 905084cdb26472048af9324de89d4566,
+    type: 3}
+  m_PrefabInstance: {fileID: 972630634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &972630634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1680,21 +1698,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6113377377033434666, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
-        type: 3}
-      propertyPath: m_EdgeRadius
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6113377377033434666, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6113377377033434666, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 0.6
-      objectReference: {fileID: 0}
     - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
         type: 3}
       propertyPath: uiHealth
@@ -1702,8 +1705,33 @@ PrefabInstance:
       objectReference: {fileID: 75881277}
     - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
         type: 3}
-      propertyPath: groundedRaycastDistance
-      value: 0.06
+      propertyPath: PolyTrigUp
+      value: 
+      objectReference: {fileID: 177466627}
+    - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
+        type: 3}
+      propertyPath: PolyTrigRight
+      value: 
+      objectReference: {fileID: 84966832}
+    - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
+        type: 3}
+      propertyPath: PolyTrigDown
+      value: 
+      objectReference: {fileID: 1809299691}
+    - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
+        type: 3}
+      propertyPath: PolyTrigLeft
+      value: 
+      objectReference: {fileID: 334012789}
+    - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
+        type: 3}
+      propertyPath: coyoteJumpTime
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113377377033434667, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
+        type: 3}
+      propertyPath: jumpCount
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6113377377033434670, guid: 15a3cf3dfb3d28a40b3d22231878dd27,
         type: 3}
@@ -1712,3 +1740,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15a3cf3dfb3d28a40b3d22231878dd27, type: 3}
+--- !u!60 &1809299691 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5902061256281444927, guid: 905084cdb26472048af9324de89d4566,
+    type: 3}
+  m_PrefabInstance: {fileID: 972630634}
+  m_PrefabAsset: {fileID: 0}

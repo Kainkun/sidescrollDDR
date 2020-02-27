@@ -16,12 +16,16 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     Vector2 velocity;
     public float moveSpeed = 5;
+    public int jumpCount = 1;
+    int currentJumpCount;
     public float jumpHeight = 5;
     public float jumpDistance = 5;
     public float timeToJumpHeight = 0.5f;
+    public float coyoteJumpTime = 0.1f;
+    public float terminalVelocity = 10;
     float jumpGravity;
     float jumpVelocity;
-    public float terminalVelocity = 10;
+
     public float groundedRaycastBoxWidth = 1;
     public float groundedRaycastDistance = 0.01f;
     bool ceiling;
@@ -48,8 +52,6 @@ public class Player : MonoBehaviour
         ceilingHitMask = ~(enemyOnlyMask | ignoreRaycastMask);
 
         CalculateJumpData();
-
-        grounded = true;
 
         SetStartingUI();
     }
@@ -106,22 +108,39 @@ public class Player : MonoBehaviour
         rb.velocity = velocity;
     }
 
+    Coroutine currentCoyoteCoroutine;
     void CheckGrounded()
     {
-        if (Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.down, groundedRaycastDistance))
+        if ( Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.down, groundedRaycastDistance))
         {
-            grounded = true;
+            /*if (currentCoyoteCoroutine != null)
+            {
+                StopCoroutine(currentCoyoteCoroutine);
+                currentCoyoteCoroutine = null;
+            }*/
 
             if (!grounded)
             {
+                print("LAND");
+                currentJumpCount = jumpCount;
                 velocity.y = 0;
             }
+            grounded = true;
         }
         else
         {
-            grounded = false;
+            if(grounded)
+            {
+                grounded = false;
+                currentCoyoteCoroutine = StartCoroutine(CoyoteTime(coyoteJumpTime));
+            }
             velocity.y = Mathf.Max(velocity.y + jumpGravity * Time.deltaTime, -terminalVelocity);
         }
+    }
+
+    IEnumerator CoyoteTime(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
 
     void CheckCeiling()
@@ -130,10 +149,9 @@ public class Player : MonoBehaviour
         {
             if (!ceiling)
             {
-                print("OW MY HEAD");
-                ceiling = true;
                 velocity.y = 0;
             }
+            ceiling = true;
         }
         else
         {
@@ -149,8 +167,12 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if(grounded)
+        if(currentJumpCount > 0)
+        {
+            if (currentJumpCount > 0)
+                currentJumpCount--;
             velocity.y = jumpVelocity;
+        }
     }
 
 
