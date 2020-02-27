@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public float timeToJumpHeight = 0.5f;
     float jumpGravity;
     float jumpVelocity;
+    public float terminalVelocity = 10;
     public float groundedRaycastBoxWidth = 1;
     public float groundedRaycastDistance = 0.01f;
     bool ceiling;
@@ -67,6 +68,12 @@ public class Player : MonoBehaviour
         CheckGrounded();
         CheckCeiling();
         CalculateMovement();
+
+        if(transform.position.y < -20)
+        {
+            transform.position = Vector2.zero;
+            rb.velocity = Vector2.zero;
+        }
     }
 
     void MovementInput()
@@ -101,24 +108,25 @@ public class Player : MonoBehaviour
 
     void CheckGrounded()
     {
-        if (Physics2D.BoxCast(transform.position, new Vector2(groundedRaycastBoxWidth, 1f), 0, Vector2.down, groundedRaycastDistance))
+        if (Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.down, groundedRaycastDistance))
         {
+            grounded = true;
+
             if (!grounded)
             {
-                grounded = true;
                 velocity.y = 0;
             }
         }
         else
         {
             grounded = false;
-            velocity.y += jumpGravity * Time.deltaTime;
+            velocity.y = Mathf.Max(velocity.y + jumpGravity * Time.deltaTime, -terminalVelocity);
         }
     }
 
     void CheckCeiling()
     {
-        if (Physics2D.BoxCast(transform.position, new Vector2(groundedRaycastBoxWidth, 1f), 0, Vector2.up, groundedRaycastDistance, ceilingHitMask))
+        if (Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.up, groundedRaycastDistance, ceilingHitMask))
         {
             if (!ceiling)
             {
@@ -234,7 +242,14 @@ public class Player : MonoBehaviour
         print("is ded");
     }
 
-
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, Vector2.down * groundedRaycastDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, Vector3.one * groundedRaycastBoxWidth);
+        Gizmos.DrawWireCube(transform.position + (Vector3.down * groundedRaycastDistance), Vector3.one * groundedRaycastBoxWidth);
+    }
 
 
 }
