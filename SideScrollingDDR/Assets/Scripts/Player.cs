@@ -131,6 +131,9 @@ public class Player : MonoBehaviour
         {
             if(grounded)
             {
+                if (currentJumpCount > 0)
+                    currentJumpCount--;
+
                 grounded = false;
                 currentCoyoteCoroutine = StartCoroutine(CoyoteTime(coyoteJumpTime));
             }
@@ -169,8 +172,9 @@ public class Player : MonoBehaviour
     {
         if(currentJumpCount > 0)
         {
-            if (currentJumpCount > 0)
+            if (!grounded)
                 currentJumpCount--;
+
             velocity.y = jumpVelocity;
         }
     }

@@ -50,7 +50,7 @@ public class MainCamera : MonoBehaviour
 
 
     Vector3 camGoTo;
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         camGoTo = Vector2.Lerp(transform.position, player.transform.position, Time.deltaTime * cameraSpeed);
         camGoTo.z = -10;
