@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     public float jumpDistance = 5;
     public float timeToJumpHeight = 0.5f;
     public float coyoteJumpTime = 0.1f;
+    public float jumpBufferTime = 0.1f;
+    bool jumpBuffer;
     public float terminalVelocity = 10;
     float jumpGravity;
     float jumpVelocity;
@@ -108,42 +110,62 @@ public class Player : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    Coroutine currentCoyoteCoroutine;
     void CheckGrounded()
     {
-        if ( Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.down, groundedRaycastDistance))
+        if (Physics2D.BoxCast(transform.position, Vector3.one * groundedRaycastBoxWidth, 0, Vector2.down, groundedRaycastDistance)) //on ground
         {
-            /*if (currentCoyoteCoroutine != null)
-            {
-                StopCoroutine(currentCoyoteCoroutine);
-                currentCoyoteCoroutine = null;
-            }*/
 
-            if (!grounded)
+            if (!grounded) //land on ground
             {
-                print("LAND");
+                if (currentCoyoteCoroutine != null)
+                {
+                    StopCoroutine(currentCoyoteCoroutine);
+                    currentCoyoteCoroutine = null;
+                }
+
                 currentJumpCount = jumpCount;
                 velocity.y = 0;
+
+                if(currentJumpBufferCoroutine != null) // if hit ground with jump buffer
+                {
+                    Jump();
+                }
+
             }
             grounded = true;
         }
-        else
+        else //in air
         {
-            if(grounded)
+            if(grounded) //leaving ground
             {
                 if (currentJumpCount > 0)
                     currentJumpCount--;
 
                 grounded = false;
-                currentCoyoteCoroutine = StartCoroutine(CoyoteTime(coyoteJumpTime));
+
+                if(jumping == false) //if leaving ground without jumping
+                {
+                    currentCoyoteCoroutine = StartCoroutine(CoyoteTime(coyoteJumpTime));
+                }
+
+                jumping = false;
             }
             velocity.y = Mathf.Max(velocity.y + jumpGravity * Time.deltaTime, -terminalVelocity);
         }
     }
 
+    Coroutine currentCoyoteCoroutine;
     IEnumerator CoyoteTime(float time)
     {
         yield return new WaitForSeconds(time);
+        currentCoyoteCoroutine = null;
+    }
+
+    Coroutine currentJumpBufferCoroutine;
+    IEnumerator JumpBuffer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        currentJumpBufferCoroutine = null;
     }
 
     void CheckCeiling()
@@ -168,14 +190,29 @@ public class Player : MonoBehaviour
         jumpVelocity = Mathf.Abs(jumpGravity) * timeToJumpHeight;
     }
 
+    bool jumping;
     void Jump()
     {
-        if(currentJumpCount > 0)
+
+        if (currentJumpCount > 0 || currentCoyoteCoroutine != null)
         {
+            jumping = true;
+
             if (!grounded)
                 currentJumpCount--;
 
             velocity.y = jumpVelocity;
+        }
+
+        if(currentJumpCount <= 0 || !grounded)
+        {
+            currentJumpBufferCoroutine = StartCoroutine(JumpBuffer(jumpBufferTime));
+        }
+
+        if (currentCoyoteCoroutine != null)
+        {
+            StopCoroutine(currentCoyoteCoroutine);
+            currentCoyoteCoroutine = null;
         }
     }
 
@@ -265,7 +302,6 @@ public class Player : MonoBehaviour
     public void Die()
     {
         health = 0;
-        print("is ded");
     }
 
     private void OnDrawGizmosSelected()

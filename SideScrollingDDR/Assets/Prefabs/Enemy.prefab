@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
-  moveSpeed: 3
+  moveSpeed: 9
   centeringSpeed: 6
 --- !u!1 &4402990692162712226
 GameObject:

@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public int health = 1;
     public float moveSpeed = 1;
     public float centeringSpeed = 3;
+    public float sightRange = 0;
 
     Player player;
     Rigidbody2D rb;
@@ -25,7 +26,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(Vector2.Distance(player.transform.position, transform.position) < 15)
+        if(sightRange == 0 || Vector2.Distance(player.transform.position, transform.position) < sightRange)
             Movement();
     }
 
